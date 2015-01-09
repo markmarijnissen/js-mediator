@@ -1,0 +1,25 @@
+{
+  "name": "js-mediator",
+  "version": "0.1.0",
+  "description": "Javascript Mediator Pattern",
+  "main": "mediator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:markmarijnissen/js-mediator.git"
+  },
+  "keywords": [
+    "mediator"
+  ],
+  "author": "Mark Marijnissen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/markmarijnissen/js-mediator/issues"
+  },
+  "homepage": "https://github.com/markmarijnissen/js-mediator",
+  "dependencies": {
+    "signals": "^1.0.0"
+  }
+}

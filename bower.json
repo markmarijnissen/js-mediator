@@ -1,0 +1,21 @@
+{
+  "name": "js-mediator",
+  "version": "0.1.0",
+  "authors": [
+    "Mark Marijnissen <markmarijnissen@gmail.com>"
+  ],
+  "description": "Tiny library to support the Mediator pattern",
+  "main": "dist/mediator.js",
+  "keywords": [
+    "mediator"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/markmarijnissen/js-mediator",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

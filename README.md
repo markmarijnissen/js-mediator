@@ -5,7 +5,7 @@ js-mediator
 
 At less than 2kb minified, this tiny utility library allows you to write well-designed apps.
 
-## Getting started
+### Getting started
 
 Install using bower or npm
 
@@ -16,33 +16,24 @@ Install using bower or npm
 
 Or include the `mediator.js` script on your page.
 
-## The Idea:
+## The Idea
 
-> A module **can never** reference an other module.
+1. Split your code into **Modules** and **Mediators**
+1. Write standalone Modules with a public API that emit events. 
+2. A Module **can never** reference an other Module.
+2. Couple Modules explicitly with a Mediator.
 
 | Modules | Mediators|
 |---------|----------|
-| Decoupled| Coupled |
+| Decoupled code | Couple code |
 | Standalone | App-specific|
 | Reusable | Throw-away|
-| Clean | Dirty |
+| Clean code | Dirty code |
+| Only know about themselves | Know about everything |
 
-1. Write standalone modules with a public API that emit events. 
-2. Couple those modules explicitly with a Mediator.
+### Benefits
 
-## Tips:
-
-* Avoid referencing other modules **at all costs!**. 
-* Method and event names should make sense **in the context of the current module**. Example: A button should emit a `clicked` event, not a `sendTweet` event.
-* Create multiple mediators - one for every app domain.
-* Try to keep Mediator code at a minimum. When Mediators get to big, refactor into reusable Modules.
-* All hotfixes, hacks, patches, workarounds should be written in a Mediator.
-
-## Benefits:
-
-The Mediator pattern enforces a clear seperation of concerns. Modules have **no reference at all** of other modules. This forces you to think in differently at times - but the benefits are worth it:
-
-* Clean, standalone code.
+* Clean, standalone code, with clear seperation of concerns.
 * Modules are reusable in other projects.
 * Implementation can be easily swapped - simply implement the same public API and events.
 * Modules are encapsulated and therefore easy to test.
@@ -113,6 +104,15 @@ Mediator.forEach([instanceName],[ArrayOfModuleNames],callback)
 // where callback is:
 callback(module,name,Module,Module,etc...)
 ```
+
+## Tips:
+
+* Avoid referencing other modules **at all costs!**. 
+* Method and event names should make sense **in the context of the current module**. Example: A button should emit a `clicked` event, not a `sendTweet` event.
+* Create multiple mediators - one for every app domain.
+* Try to keep Mediator code at a minimum. When Mediators get to big, refactor into reusable Modules.
+* All hotfixes, hacks, patches, workarounds should be written in a Mediator.
+
 
 ## Changelog
 

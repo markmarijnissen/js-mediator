@@ -44,23 +44,25 @@ When tackling a difficult problem, write code in the mediator first - you're all
 
 ## Usage:
 
+### Modules
+
 In your code, register Modules and instances.
 
-If you have only one, register a Module:
 ```javascript
+// If you have only one, register a Module:
 Mediator.register('Router',myRouter);
 // Note: name must start with Uppercase.
-```
 
-If you have many, register an instance:
-```javascript
+// If you have many, register an instance:
 Mediator.register('button',myButton);
 // Note: Module name must start with lowercase.
 ```
 
-Then create a Mediator for every domain in your app.
+### Mediators
 
-You can couple Modules to eachother:
+Create a Mediator for every domain in your app.
+
+Couple Modules:
 ```javascript
 // For example, render a page when your Router changes
 Mediator.couple(['Router','PageController'],function(Router,PageController){
@@ -70,7 +72,7 @@ Mediator.couple(['Router','PageController'],function(Router,PageController){
 });
 ```
 
-Or you can couple every instance of a type:
+Couple every instance of a type:
 ```javascript
 // For example, trigger the Router when user clicks any button
 Mediator.forEach('button',['Router'],function(button,name,Router){
@@ -80,7 +82,7 @@ Mediator.forEach('button',['Router'],function(button,name,Router){
 });
 ```
 
-Or you can add behavior to every instance and module:
+Extend every module and instance:
 ```javascript
 // For example, add a 'offline' callback to every module in your app.
 Mediator.forEach(['Connection'],function(module,name){
@@ -90,14 +92,18 @@ Mediator.forEach(['Connection'],function(module,name){
 });
 ```
 
-The complete API:
+### The complete API:
+In your **Modules**:
 ```javascript
 Mediator.register(name,object)
 // lowerCase = instance - can be registered multiple times
 // UpperCase = Module - can be registered only one time (Singleton)
+```
 
+In your **Mediators**:
+```javascript
 Mediator.couple(ArrayOfModuleNames,callback)
-// where callback is
+// where callback is:
 callback(Module,Module,Module)
 
 Mediator.forEach([instanceName],[ArrayOfModuleNames],callback)

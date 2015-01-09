@@ -25,6 +25,9 @@
  *   instead of `tweet`
  */
 
+// Mediator object
+var Mediator = {};
+
 // Global Module register
 var Modules = {};
 
@@ -169,8 +172,6 @@ Mediator.forEach = function MediatorForEach(filter,moduleNames,fn){
     throw new Error('Callback is not a function!');
   }
   Mediator.couple(moduleNames,function(modules){
-    if(filter && Mediator.DEBUG_COUPLED) 
-
     modules = Array.prototype.slice.apply(arguments);
     var callback = function EnhanceForEachCallback(module,name){
       if(filter === false || filter === name){

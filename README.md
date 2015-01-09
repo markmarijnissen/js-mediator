@@ -46,16 +46,16 @@ When tackling a difficult problem, write code in the mediator first - you're all
 
 ### Modules
 
-In your code, register Modules and instances.
+Register your Modules and instances.
 
 ```javascript
-// If you have only one, register a Module:
+// Register a Module if you register only once. (A Singleton)
 Mediator.register('Router',myRouter);
 // Note: name must start with Uppercase.
 
-// If you have many, register an instance:
+// Register an instance if you register multiple instances.
 Mediator.register('button',myButton);
-// Note: Module name must start with lowercase.
+// Note: name must start with lowercase.
 ```
 
 ### Mediators

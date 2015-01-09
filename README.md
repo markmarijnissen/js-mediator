@@ -44,6 +44,12 @@ When tackling a difficult problem, write code in the mediator first - you're all
 
 ## Usage:
 
+Image you have
+
+* A **Router** module that tracks URL changes
+* A **PageController** module that renders a page
+* Many **button**s that emit `clicked` events.
+
 ### Modules
 
 Register your Modules and instances.
@@ -64,7 +70,7 @@ Create a Mediator for every domain in your app.
 
 Couple Modules:
 ```javascript
-// For example, render a page when your Router changes
+// Render a page when the route changes.
 Mediator.couple(['Router','PageController'],function(Router,PageController){
   Router.on('change',function(url){
     PageController.set(url);
@@ -74,7 +80,7 @@ Mediator.couple(['Router','PageController'],function(Router,PageController){
 
 Couple every instance of a type:
 ```javascript
-// For example, trigger the Router when user clicks any button
+// When a button is clicked, navigate using the Router.
 Mediator.forEach('button',['Router'],function(button,name,Router){
   button.on('clicked',function(event){
     Router.navigate(event.url);

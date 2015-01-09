@@ -3,6 +3,8 @@ js-mediator
 
 > A design pattern to decouple your app using the mediator pattern.
 
+At less than 2kb minified, this tiny utility library allows you to write well-designed apps.
+
 ## Getting started
 
 Install using bower or npm
@@ -12,35 +14,33 @@ Install using bower or npm
   npm install js-mediator
 ```
 
-Or simply include the `mediator.js` script on your page.
+Or include the `mediator.js` script on your page.
 
-## The Rule:
+## The Idea:
 
-* Modules = Decoupled, standalone, reusable, clean code.
-* Mediators = Coupled, app-specific, throw-away code. 
+> A module **can never** reference an other module.
 
-Modules have a public API and emit events. Modules are coupled only and explicitly in Mediators.
+| Modules | Mediators|
+|---------|----------|
+| Decoupled| Coupled |
+| Standalone | App-specific|
+| Reusable | Throw-away|
+| Clean | Dirty |
+
+1. Write standalone modules with a public API that emit events. 
+2. Couple those modules explicitly with a Mediator.
 
 ## Tips:
 
-Tips when writing Modules:
-
-* Create standalone modules - avoid **referencing** other modules **at all costs!**. 
-* Modules should define public methods and events to communicate with the "outside world".
+* Avoid referencing other modules **at all costs!**. 
 * Method and event names should make sense **in the context of the current module**. Example: A button should emit a `clicked` event, not a `sendTweet` event.
-
-Tips when writing Mediators:
-
-* Couple modules explicitly with the Mediator.
 * Create multiple mediators - one for every app domain.
 * Try to keep Mediator code at a minimum. When Mediators get to big, refactor into reusable Modules.
 * All hotfixes, hacks, patches, workarounds should be written in a Mediator.
 
-When tackling a difficult problem: Write code in the mediator first - you're allowed to do everything there. Once you have a solid understanding of the problem, you can refactor the mediator into clean, decoupled modules.
+## Benefits:
 
-## Benefits
-
-The Mediator pattern enforces a clear seperation of concerns. Modules have **no reference at all** of other modules. This forces you to think in differently at times. But the benefits are worth it:
+The Mediator pattern enforces a clear seperation of concerns. Modules have **no reference at all** of other modules. This forces you to think in differently at times - but the benefits are worth it:
 
 * Clean, standalone code.
 * Modules are reusable in other projects.
@@ -49,7 +49,9 @@ The Mediator pattern enforces a clear seperation of concerns. Modules have **no 
 * You are allowed to experiment, discover, learn, hack..... (in the Mediators)
 * ....and when you tackled to problem, you can refactor the code into clean modules.
 
-## Usage
+When tackling a difficult problem, write code in the mediator first - you're allowed to do everything there. Once you have a solid understanding of the problem, you can refactor the mediator into clean, decoupled modules. This way, the Mediator pattern plays very nicely with natural software development.
+
+## Usage:
 
 In your code, register Modules and instances.
 
@@ -114,7 +116,7 @@ callback(module,name,Module,Module,etc...)
 
 ## Changelog
 
-### 0.1.0 (9/1/2014)
+### 0.2.0 (9/1/2014)
 
 * Initial release
 

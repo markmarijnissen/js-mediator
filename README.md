@@ -16,7 +16,7 @@ Install using bower or npm
 
 Or include the `mediator.js` script on your page.
 
-## The Rules
+### The Rules
 
 1. Split your code into **Modules** and **Mediators**
 1. Write standalone Modules with a public API that emit events. 

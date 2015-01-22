@@ -9,105 +9,20 @@ js-mediator
 ```
 Or include the `mediator.js` script on your page.
 
+## Contents
 
-## Example
-
-Image you have a Blog-app:
-
-* The **Router** module tracks URL changes
-* The **PageController** module renders the page
-* The are many **button**s that emit `clicked` events.
-* You have business logic in **Post**, **Author** and **Comments** modules.
-
-### Modules
-
-Register your Modules and instances.
-
-```javascript
-// Register a Module if you register only once. (A Singleton)
-Mediator.register('Router',myRouter);
-// Note: name must start with Uppercase.
-
-// Register an instance if you register multiple instances.
-Mediator.register('button',myButton);
-// Note: name must start with lowercase.
-```
-
-### Mediators
-
-Create a Mediator for every domain in your app.
-
-Create a connection to couple modules:
-```javascript
-// Render a page when the route changes.
-Mediator.connect(['Router','PageController'],function(Router,PageController){
-  Router.on('change',function(url){
-    PageController.set(url);
-  });
-});
-```
-
-Connect every instance to one (or more) Modules
-```javascript
-// When a button is clicked, navigate using the Router.
-Mediator.forEach('button',['Router'],function(button,name,Router){
-  button.on('clicked',function(event){
-    Router.navigate(event.url);
-  });
-});
-```
-
-Group multiple modules into a single module: (encapsulation)
-```javascript
-// Create a new Module named `Blog` that connects and manages 
-// Authors, Post and Comments:
-Mediator.group('Blog',['Authors','Posts','Comments'],function(Authors,Post,Comments){
-  
-  // Couple internal Modules together, for example:
-
-  // Enhance a post instance with Comments and Author data: 
-  Mediator.forEach('post',function(post){
-    post.author = Author.get(post.authorId);
-    post.comments = Comments.findAll(postId);
-  })
-
-  // Create Abstraction for outside world:
-  var Blog = {};
-  Blog.listMyPosts = function(){
-    return Posts.search({authorId: Author.myId});
-  }
-
-  // Register 'Blog' module:
-  return Blog;
-})
-
-// Now you can connect Blog to other Modules:
-Mediator.connect(['Blog','View'],function(){
-  view.on('menu-clicked',function(item){
-    if(item === 'author') {
-      view.render('my-posts',Blog.listMyPosts());
-    }
-  });
-});
-
-// You cannot use the individual Author, Post or Comments Module!
-//
-// They are encapsulated, i.e. they are hidden in the Blog abstraction.
-Mediator.connect(['Author','Posts'],function(){
-  // will throw an Error!
-});
-```
-
-Extend every module and instance:
-```javascript
-// For example, add a 'offline' callback to every module in your app.
-Mediator.forEach(['Connection'],function(module,name){
-  Connection.on('offline',function(event){
-    if(module.setOffline) module.setOffline(event);
-  });
-});
-```
-
+* [The Idea](#the-idea)
+    * [Why use Mediators?](#why-use-mediators)
+    * [Mediating with Object-Oriented code: Dealing with instances](#mediating-with-object-oriented-code-dealing-with-instances)
+    * [Encapsulate modules into a Group](#encapsulate-modules-into-a-group)
+    * [Benefits](#benefits)
+    * [What the Mediator does not do](#what-the-mediator-does-not-do)
+    * [How to create a mess with Mediators](#how-to-create-a-mess-with-mediators)
+* [Example](#example)
+* [Summary](#summary)
+* [Changelog](#changelog)
+* [Contribute](#contribute)
+* [Contact](#contact)
 
 ## The Idea
 
@@ -315,6 +230,105 @@ It's still possible to create really bad stuff:
 * Use function and event names that make no sense from the perspective of the Module.
 * Write too many Modules - one for every function (and don't encapsulate them into groups).
 * Coupe Modules using a complicated cascade of events. Bonus points if you create a loop and get Stack Overflow.
+
+## Example
+
+Image you have a Blog-app:
+
+* The **Router** module tracks URL changes
+* The **PageController** module renders the page
+* The are many **button**s that emit `clicked` events.
+* You have business logic in **Post**, **Author** and **Comments** modules.
+
+### Modules
+
+Register your Modules and instances.
+
+```javascript
+// Register a Module if you register only once. (A Singleton)
+Mediator.register('Router',myRouter);
+// Note: name must start with Uppercase.
+
+// Register an instance if you register multiple instances.
+Mediator.register('button',myButton);
+// Note: name must start with lowercase.
+```
+
+### Mediators
+
+Create a Mediator for every domain in your app.
+
+Create a connection to couple modules:
+```javascript
+// Render a page when the route changes.
+Mediator.connect(['Router','PageController'],function(Router,PageController){
+  Router.on('change',function(url){
+    PageController.set(url);
+  });
+});
+```
+
+Connect every instance to one (or more) Modules
+```javascript
+// When a button is clicked, navigate using the Router.
+Mediator.forEach('button',['Router'],function(button,name,Router){
+  button.on('clicked',function(event){
+    Router.navigate(event.url);
+  });
+});
+```
+
+Group multiple modules into a single module: (encapsulation)
+```javascript
+// Create a new Module named `Blog` that connects and manages 
+// Authors, Post and Comments:
+Mediator.group('Blog',['Authors','Posts','Comments'],function(Authors,Post,Comments){
+  
+  // Couple internal Modules together, for example:
+
+  // Enhance a post instance with Comments and Author data: 
+  Mediator.forEach('post',function(post){
+    post.author = Author.get(post.authorId);
+    post.comments = Comments.findAll(postId);
+  })
+
+  // Create Abstraction for outside world:
+  var Blog = {};
+  Blog.listMyPosts = function(){
+    return Posts.search({authorId: Author.myId});
+  }
+
+  // Register 'Blog' module:
+  return Blog;
+})
+
+// Now you can connect Blog to other Modules:
+Mediator.connect(['Blog','View'],function(){
+  view.on('menu-clicked',function(item){
+    if(item === 'author') {
+      view.render('my-posts',Blog.listMyPosts());
+    }
+  });
+});
+
+// You cannot use the individual Author, Post or Comments Module!
+//
+// They are encapsulated, i.e. they are hidden in the Blog abstraction.
+Mediator.connect(['Author','Posts'],function(){
+  // will throw an Error!
+});
+```
+
+Extend every module and instance:
+```javascript
+// For example, add a 'offline' callback to every module in your app.
+Mediator.forEach(['Connection'],function(module,name){
+  Connection.on('offline',function(event){
+    if(module.setOffline) module.setOffline(event);
+  });
+});
+```
+
 
 ## Summary
 

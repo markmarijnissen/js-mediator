@@ -16,8 +16,8 @@ Or include the `mediator.js` script on your page.
     * [Mediating with Object-Oriented code: Dealing with instances](#mediating-with-object-oriented-code-dealing-with-instances)
     * [Encapsulate modules into a Group](#encapsulate-modules-into-a-group)
     * [Benefits](#benefits)
-    * [What the Mediator does not do](#what-the-mediator-does-not-do)
-    * [How to create a mess with Mediators](#how-to-create-a-mess-with-mediators)
+    * [Mediator Limitations](#mediator-limitations)
+    * [Bad Ideas](#bad-ideas)
 * [Example](#example)
 * [Summary](#summary)
 * [Changelog](#changelog)
@@ -28,7 +28,7 @@ Or include the `mediator.js` script on your page.
 
 ### Why use Mediators?
 
-**The Problem:** Referencing other modules introduces tight coupling and prevents seperation of concerns.
+**The Problem:** Referencing other modules introduces tight coupling.
 
 In MV-Whatever architecture, modules always have a reference to another module. For example, a Controller has a reference to the Model and View.
 
@@ -44,11 +44,11 @@ Instead that modules have an **implicit dependency** on other modules, the **dep
 
 Coupling is done using the public API of a Module - so you should take care to keep your public functions and events small and concise. 
 
-**Summary:**
+**Key points:**
 
 * `js-mediator` makes no assumptions about your code.
 * You need to decide how to split your app into Modules (i.e. Model/View/...)
-* The public API determines the reusability and encapsulation. Therefore, keep the public API small and conscise. Use names that make sense in the context of the Module. 
+* Keep the public API small and conscise. Use names that make sense in the context of the Module. 
 * Protect the Black Box: A Module **can never** reference another Module!
 
 ### Mediating with Object-Oriented code: Dealing with instances
@@ -95,10 +95,10 @@ Mediator.forEach('button',['PdfViewer'],function(button,name,PdfViewer){
 });
 ```
 
-**Summary:**
+**Key points:**
 
 * To mediate multiple objects of the same class, register an instance.
-* Couple instances with eachother or Modules using `Meditator.forEach`.
+* Couple instances using `Meditator.forEach`.
 
 ### Encapsulate modules into a Group.
 
@@ -165,7 +165,7 @@ Mediator.connect(['Author','Posts'],function(){
 });
 ```
 
-**Summary:**
+**Key points:**
 
 * **A Group contains Mediator code** - it should only connect modules.
 * **A Group is registered as a Module** and exposes a higher-level public API (abstraction).
@@ -184,7 +184,7 @@ Mediator.connect(['Author','Posts'],function(){
 
 * **It's not all-or-nothing:** Most design patterns are all-or-nothing. The Mediator pattern can be slowly introduced. Starting with one big module, you can slowly extract functionality into multiple modules (and mediate between them).
 
-### What the Mediator does not do
+### Mediator Limitations
 
 Since the Mediator pattern makes no assumptions about your code, you need to decide for yourself:
 
@@ -192,7 +192,7 @@ Since the Mediator pattern makes no assumptions about your code, you need to dec
 * What should be the domain of a single Mediator? How many Mediators do you create? 
 * How does the data flow in your application? 
 
-### How to create a mess with Mediators
+### Bad ideas
 
 It's still possible to create really bad stuff:
 

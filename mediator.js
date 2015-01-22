@@ -1,29 +1,9 @@
 (function(){
-/**
- * JS-Mediator
- *
- * Key idea
- * - Write independent, standalone modules.
- * - For every module, define a public API and emit events.
- * - Write mediator to couple modules: on event, call public API
- *
- * Getting started
- * - Register all modules and instances you want to couple using `Mediator.register`
- * - Couple modules using `Mediator.couple`
- * - Couple instances using `Mediator.forEach`
- *
- *  Note: A module can be created only once (a singleton), whereas an instance
- *  can be created multiple times. A module name MUST start with UpperCase. 
- *  A instance name MUST start with lowerCase.
- *
- * Tips:
- * - If you can, avoid dependencies between modules
- * - If you can't, make the dependency explicit by using `Mediator.couple`
- * - If that doesn't make sense, break the rules :)
- * - Modules should use words that make sense in their context. Example: 
- *   A `button` instance should have an event called `clicked`
- *   instead of `tweet`
- */
+/*****************************************************
+// js-mediator
+// Mark Marijnissen
+// https://github.com/markmarijnissen/js-mediator
+******************************************************/
 
 // Mediator object
 var Mediator = {};
@@ -36,6 +16,9 @@ var ModuleCallbackList = [];
 
 // List of ForEachCallbackList (all modules)
 var ForEachCallbackList = [];
+
+// Modules that are already coupled/grouped
+var Coupled = {};
 
 /**
  * Mediator.register(name,module)
@@ -111,6 +94,14 @@ Mediator.register = function MediatorRegister(name,object){
  *    })
  */
 Mediator.couple = function MediatorCouple(modules,callback){
+  claimed = modules.filter(function(name){
+    var available = !!Coupled[name];
+    if(available) Coupled[name] = true;
+    return available;
+  });
+  if(claimed.length > 0){
+    throw new Error('Cannot group modules '+claimed.join(',')+': They are already coupled!');
+  }
   var waitFor = modules.filter(function(name){ return !Modules[name]; });
   // All modules are already loaded! Invoke immediatly
   if(waitFor.length === 0){
@@ -197,6 +188,30 @@ Mediator.forEach = function MediatorForEach(filter,moduleNames,fn){
         });
       }
     });
+  });
+  return Mediator;
+};
+
+/**
+ * Group Modules
+ *
+ * A new Module is created with `name`.
+ * The grouped modules cannot be coupled anymore -
+ * the group encapsulates the modules. 
+ * 
+ * @param  {string}   name    
+ * @param  {Array<string>} moduleNames 
+ * @param  {Function} callback(module,module,module,....)
+ * @return {Mediator}               
+ */
+Mediator.group = function MediatorGroup(name,moduleNames,callback){
+  if(name[0] !== name[0].toUpperCase()){
+    throw new Error('Group is a Module, so the name should start with UpperCase.');
+  }
+  Mediator.couple(moduleNames,function MediatorGroupCallback(){
+    var module = {};
+    module = callback.apply(module,arguments) || module;
+    Mediator.register(name,module);
   });
   return Mediator;
 };

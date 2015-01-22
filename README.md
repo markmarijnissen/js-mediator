@@ -1,37 +1,29 @@
 js-mediator
 ===============
 
-> A design pattern to decouple your app using the mediator pattern.
+> Write standalone, independent Modules, and couple them using Mediators.
 
 At less than 2kb minified, this tiny utility library allows you to write well-designed apps.
 
-## The Rules
+## Contents
 
-2. Write many small, independent, standalone Modules (or Instances)
-    3. A Module **can never** reference an other Module.
-    1. The public API and events are used to couple modules - make them small, easy and specific. Avoid passing complex functions, objects or modules.
-    2. Name your methods and events in the language and context of the module, i.e. a `Button` should have a `clicked` event instead of `wantToSendTweet` event. 
-3. Write only a few Mediators (for every domain in your app).
-    2. Couple Modules explicitly with a Mediator.
-    1. Hack, prototype and experiment in the Mediators - keep the Modules clean.
-    2. If you can, extract functionality from the Mediator into a Module.
-    3. Encapsulate multiple modules into a single Group - to avoid Module clutter.
-    
+* [Usage](#usage)
+      * `Mediator.register`
+      * `Mediator.connect`
+      * `Mediator.forEach`
+      * `Mediator.group`
+* [The rules](#the-rules)
+* [Example](#example)
+* [Why?](#why)
+      * [Decoupled architecture](#problem-1-coupled-architecture)
+      * [Introducing Instances](#problem-2-not-every-part-of-an-application-is-a-singleton)
+      * [Introducing Groups](#problem-3-too-many-modules-and-mediators-make-the-application-incomprehensible)
+* [What the Mediator does not do](#what-the-mediator does-not-do)
+* [How to create a mess with Mediators](#how-to-create-a-mess-with-mediators)
+* [Changelog](#changelog)
+* [Contribute](#contribute)
+* [Contact](#contact)
 
-| Modules | Mediators|
-|---------|----------|
-| Decoupled code | Couple code |
-| Standalone | App-specific|
-| Reusable | Throw-away|
-| Clean code | Dirty code |
-| Only know about themselves | Know about everything |
-
-**Terms**
-
-* Module: An object that is registered only once (Singleton) 
-* Instance: An object that is registered multiple times 
-* Mediator: Short piece of code that glues modules and instances together.
-* Group: A encapsulated group of Modules to create a reusable abtraction.
 
 ## Usage:
 
@@ -66,6 +58,32 @@ function callback(Module,Module,Module) {
   return groupModule; // defaults to `this`, which is an empty object
 }
 ```
+
+## The Rules
+
+2. Write many small, independent, standalone Modules (or Instances)
+    3. A Module **can never** reference an other Module.
+    1. The public API of your module should be small and conscise, without unnecessary stuff.
+    2. Function and events should be named in context of your module. (i.e. a `Button` Module has a `click` event instead of a `sendMail` event).
+3. Write only a few Mediators (for every domain in your app).
+    2. Couple Modules explicitly with a Mediator.
+    1. Hack, prototype and experiment in the Mediators - keep the Modules clean.
+    2. If you can, extract functionality from the Mediator into a Module.
+    3. Encapsulate multiple modules into a single Group - to avoid Module clutter.
+    
+
+| Modules | Mediators|
+|---------|----------|
+| Decoupled code | Couple code |
+| Standalone | App-specific|
+| Reusable | Throw-away|
+| Clean code | Dirty code |
+| Only know about themselves | Know about everything |
+
+#### Other terms:
+
+* **Instance**: An object that is registered multiple times 
+* **Group**: A encapsulated group of Modules to create a reusable abtraction.
 
 ## Example
 
@@ -137,6 +155,7 @@ Mediator.group('Blog',['Post','Author','Comments'],function(Post,Author,Comments
 
 Mediator.connect(['Blog'],function(Blog){ // works! });
 Mediator.connect(['Post'],function(Post) { // error: Post is encapsulated by Blog! })
+```
 
 Extend every module and instance:
 ```javascript
@@ -222,6 +241,7 @@ Mediator.forEach('button',['PdfViewer'],function(button,name,PdfViewer){
   if(button.action === 'pdf') PdfViewer.open(button.link);
   // etc
 });
+```
 
 #### Problem #3: Too many modules and mediators make the application incomprehensible.
 
@@ -312,23 +332,27 @@ if(window.Mediator)  Mediator.register('MyModule', {...})
 ```
 This line is as unobstrusive as it can be. It's even possible to register the module in a seperate file (for example when you export your code as a global variable).
 
-#### More benefits:
+## More benefits:
 
-* Most design patterns block the natural flow of programming. The Mediator pattern works well with the natural flow, because it allows you to experiment and hack in the Mediators, while keeping the core of your code (i.e. the Modules) clean. Once your implementation is ready, you can extract functionality into individual modules.
+* **Follows natural flow of programmer:** Most design patterns block the natural flow of programming. The Mediator pattern works well with the natural flow, because it allows you to experiment and hack in the Mediators, while keeping the core of your code (i.e. the Modules) clean. Once your implementation is ready, you can extract functionality into individual modules.
 
-* Most design patterns are all-or-nothing. The Mediator pattern can be slowly introduced. Starting with one big module, you can slowly extract functionality into multiple modules (and mediate between them).
+* **It's not all-or-nothing:** Most design patterns are all-or-nothing. The Mediator pattern can be slowly introduced. Starting with one big module, you can slowly extract functionality into multiple modules (and mediate between them).
 
-* Mediators are future-proof. As JavaScript frameworks are changing so fast, it can be hard to keep up. The Mediator pattern is unobtrusive and makes no assumptions. You can easily swap out different modules for newer technology.
+* **Testable:** The encapsulated nature of Modules makes it easy to write unit-tests. As you have almost no dependencies and your outside API (methods, events) is as small and conscise as it can be, mocking other modules should not be difficult.
 
-## Common Pitfalls
+* **Mediators are future-proof.** As JavaScript frameworks are changing so fast, it can be hard to keep up. The Mediator pattern is unobtrusive and makes no assumptions. You can easily swap out different modules for newer technology.
 
-Since the Mediator pattern makes no assumptions, you need to decide for yourself:
+## What the Mediator does not do
+
+Since the Mediator pattern makes no assumptions about your code, you need to decide for yourself:
 
 * How should you split the app into Modules? 
 * What should be the domain of a single Mediator? How many Mediators do you create? 
 * How does the data flow in your application? 
 
-Also, it's still possible to create really bad stuff:
+## How to create a mess with Mediators
+
+It's still possible to create really bad stuff:
 
 * Use many Mediators on a single Module to create confusion about how the module is connected.
 * Put too much logic into the mediators.

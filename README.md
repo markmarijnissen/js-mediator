@@ -13,7 +13,7 @@ Or include the `mediator.js` script on your page.
 
 * [The Idea](#the-idea)
     * [Mediators explicitly couple your app](#mediators-explicitly-couple-your-app)
-    * [Mediating with Object-Oriented code: Dealing with instances](#mediating-with-object-oriented-code-dealing-with-instances)
+    * [Mediating with Object-Oriented code: Dealing with instances](#mediating-object-oriented-code-dealing-with-instances)
     * [Encapsulate modules into a Group](#encapsulate-modules-into-a-group)
     * [Benefits](#benefits)
     * [Mediator Limitations](#mediator-limitations)
@@ -51,7 +51,7 @@ Coupling is done using the public API of a Module - so you should take care to k
 * Keep the public API small and conscise. Use names that make sense in the context of the Module. 
 * Protect the Black Box: A Module **can never** reference another Module!
 
-### Mediating with Object-Oriented code: Dealing with instances
+### Mediating Object-Oriented code: Dealing with instances
 
 Not all application code is best modeled as singletons. Indeed, many frameworks use an Object-Oriented approach where you can instantiate multiple instances of a single class.
 

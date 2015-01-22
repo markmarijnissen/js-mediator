@@ -12,7 +12,7 @@ Or include the `mediator.js` script on your page.
 ## Contents
 
 * [The Idea](#the-idea)
-    * [Why use Mediators?](#why-use-mediators)
+    * [Mediators explicitly couple your app](#mediators-explicitly-couple-your-app)
     * [Mediating with Object-Oriented code: Dealing with instances](#mediating-with-object-oriented-code-dealing-with-instances)
     * [Encapsulate modules into a Group](#encapsulate-modules-into-a-group)
     * [Benefits](#benefits)
@@ -26,7 +26,7 @@ Or include the `mediator.js` script on your page.
 
 ## The Idea
 
-### Why use Mediators?
+### Mediators explicitly couple your app
 
 **The Problem:** Referencing other modules introduces tight coupling.
 

@@ -264,6 +264,7 @@ Mediator.connect(['Author','Posts','Comments','Blog'],
   Blog.Comments = Comments;
   Blog.init(); // Let Blog know we've injected all dependencies...
 })
+```
 
 Ouch! Now we're tightly coupling code again!
 

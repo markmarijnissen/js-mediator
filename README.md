@@ -28,52 +28,34 @@ Or include the `mediator.js` script on your page.
 
 ### Why use Mediators?
 
-**The Problem:**
+**The Problem:** Referencing other modules introduces tight coupling and prevents seperation of concerns.
 
-Model, View and Controller (or whatever) are usually coupled in one of two ways:
+In MV-Whatever architecture, modules always have a reference to another module. For example, a Controller has a reference to the Model and View.
 
-* Interactive (or top-down): High-level, abstract modules have references to low-level, specific implementations. I.e. an "AppModel" has a "PageController" has a "Template".
-* Reactive (or bottom up, or inversion of control): High-level abstractions are unaware of low-level implementations. Instead, low-level implementations have a reference to high-level abstractions using a dependency injection mechanism. I.e. a "Template" has access to the "PageController" has access to the "AppModel".
-
-However, as soon as independent modules have references to eachother, the "black box" is broken: The modules become coupled and you have access to private stuff you should never see. As the application grows, it becomes harder to seperate concerns - and you may find that your templates contain model logic.
-
-* Concerns are mixed
-* Code is coupled
+This breaks the "black box": The modules become coupled and have access to private stuff. As the application grows, it becomes harder to seperate concerns. Applications don't scale as they grow in complexity.
 
 **The Solution:** 
 
-Write independent, standalone Modules, and couple them with Mediators.
+Write independent, standalone Modules. A module should **never** reference another module. Then connect modules with Mediators.
 
-A module should **never** reference another module. Split your app in standalone, independent modules that have **no knowledge whatsoever** of eachother. You can split the Application in any way your like, for example:
+A Mediator is a small piece of code that links two (or more) modules to eachother - it contains no functional code and acts only as a Translator or Bridge.
 
-* **Model-Modules**, which contain business logic
-* **View-Modules**, which contain your template views
-* **ViewModel-Modules**, which translates Model data into Template Date
-* **Router-Module**, which instantiates the correct ViewModel
-* **Service-Modules**, which handle everything else (i.e. caching, HTTP-requests, etc)
+Instead that modules have an **implicit dependency** on other modules, the **dependency is made explicit** by the Mediator. 
 
-When all functionality is implemented, you couple everything together using Mediators. 
-
-A Mediator is a small piece of code that links two (or more) modules to eachother. For example:
-
-* When Model emits a `update` event, `ViewModel.updateData()` is called.
-* When ViewModel emits a `render` event, `View.render()` is called.
-
-Instead that modules have an **implicit dependency** on the functions, data of events of another module, the **dependency is made explicit** by the Mediator. **If the events, method signature or data changes**, you only have to update the Mediator (which acts as a "Translator" or "Bridge" between two modules).
+Coupling is done using the public API of a Module - so you should take care to keep your public functions and events small and concise. 
 
 **Summary:**
 
-* The Mediator makes no assumptions about your code - you need to decide for yourself how you want to split up the app into Modules.
-* The public functions/events determines the reusability and encapsulation. Therefore, keep the public API small and conscise. Use names that make sense in the context of the Module. 
-* Never reference another Module in your module code!
+* `js-mediator` makes no assumptions about your code.
+* You need to decide how to split your app into Modules (i.e. Model/View/...)
+* The public API determines the reusability and encapsulation. Therefore, keep the public API small and conscise. Use names that make sense in the context of the Module. 
+* Protect the Black Box: A Module **can never** reference another Module!
 
 ### Mediating with Object-Oriented code: Dealing with instances
 
 Not all application code is best modeled as singletons. Indeed, many frameworks use an Object-Oriented approach where you can instantiate multiple instances of a single class.
 
-**Problem:**
-
-How to Mediate between these multiple instances? 
+**Problem:** How to Mediate between these multiple instances? 
 
 Image you have a Button Module:
 
@@ -94,9 +76,7 @@ ButtonCollection.buttonA.on('clicked',function(){ ... })
 
 However, this approach is cumbersome - you have to write new Modules only to wrap the instances. Also - you need a global reference to ButtonCollection, otherwise you can't keep track of the Buttons! Ouch!
 
-**Solution:**
-
-Create instances.
+**Solution:** Create instances.
 
 `js-mediator` allows you to register multiple instances:
 
@@ -128,7 +108,7 @@ As your application grows, it becomes more and more tricky to understand how all
 
 Imagine you are creating a `Blog` which communicates with `Author`, `Posts` and `Comments` Modules.
 
-You could create a Mediator as Dependency Injector:
+An **anti-pattern** would be to use the Mediator as a **dependency injector**. This introduces tight coupling:
 
 ```javascript
 Mediator.connect(['Author','Posts','Comments','Blog'],
@@ -141,15 +121,9 @@ Mediator.connect(['Author','Posts','Comments','Blog'],
 })
 ```
 
-**Never do this:** You're creating a tight coupling by inserting modules into another module.
+Additionally, the Blog is **not** your single source of truth** when it comes down to Author, Posts and Comments. You can still connect these modules in other places, which might introduce unforeseen side-effects.
 
-Also, it is still possible to connect `Author` with `Posts` in a different file. The `Blog` module **does not encapsulate** the internal modules. The `Blog` does not shield its internal Modules from the other Mediators.
-
-**Solution:**
-
-Create a group: A new module that encapsulates multiple modules.
-
-The encapsulated modules are not accessible in other Mediators, therefore you now have a single abstraction to deal with multiple modules.
+**Solution:** Create a group: A new module that encapsulates multiple modules.
 
 ```javascript
 // Create a new Module named `Blog` that connects and manages 
@@ -193,9 +167,8 @@ Mediator.connect(['Author','Posts'],function(){
 
 **Summary:**
 
-* A "Group" is registered as a Module that encapsulates other Modules.
-* However, the "Group" contains Mediator code - it should only connect modules. It has minimal functional code.
-* A "Group" acts like an abstraction - internal Modules cannot be accessed anymore.
+* **A Group contains Mediator code** - it should only connect modules.
+* **A Group is registered as a Module** and exposes a higher-level public API (abstraction).
 
 ### Benefits:
 

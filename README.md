@@ -13,7 +13,7 @@ Or include the `mediator.js` script on your page.
 
 * [The Idea](#the-idea)
     * [Mediators explicitly couple your app](#mediators-explicitly-couple-your-app)
-    * [Mediating with Object-Oriented code: Dealing with instances](#mediating-object-oriented-code-dealing-with-instances)
+    * [Mediating Object-Oriented code: Dealing with instances](#mediating-object-oriented-code-dealing-with-instances)
     * [Encapsulate modules into a Group](#encapsulate-modules-into-a-group)
     * [Benefits](#benefits)
     * [Mediator Limitations](#mediator-limitations)

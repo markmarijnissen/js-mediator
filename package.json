@@ -1,6 +1,6 @@
 {
   "name": "js-mediator",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Javascript Mediator Pattern",
   "main": "mediator.js",
   "scripts": {
@@ -19,8 +19,5 @@
   "bugs": {
     "url": "https://github.com/markmarijnissen/js-mediator/issues"
   },
-  "homepage": "https://github.com/markmarijnissen/js-mediator",
-  "dependencies": {
-    "signals": "^1.0.0"
-  }
+  "homepage": "https://github.com/markmarijnissen/js-mediator"
 }

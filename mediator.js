@@ -18,7 +18,7 @@ var ModuleCallbackList = [];
 var ForEachCallbackList = [];
 
 // Modules that are already coupled/grouped
-var Coupled = {};
+var Connected = {};
 
 /**
  * Mediator.register(name,module)
@@ -30,9 +30,9 @@ Mediator.register = function MediatorRegister(name,object){
   if(typeof name !== 'string'){
     throw new Error('Name must be a string!');
   }
-  // validate if module is an object
-  if(typeof object !== 'object'){
-    throw new Error('Must register an object!');
+  // validate if module exists
+  if(typeof object === 'undefined'){
+    throw new Error('Mediator.register takes two arguments');
   }
   // set 'isInstance': When name starts with lowercase letter
   var isInstance = name[0] === name[0].toLowerCase();
@@ -80,7 +80,7 @@ Mediator.register = function MediatorRegister(name,object){
 };
 
 /**
- * Mediator.couple(modules,callback)
+ * Mediator.connect(modules,callback)
  *
  * @param  {Array:string} array of module names to wait for
  * @param  {Function}     callback
@@ -89,14 +89,14 @@ Mediator.register = function MediatorRegister(name,object){
  *
  * Example: RouterMediator.js
  *
- *    Mediator.couple(['Router','PageController'],function(router,page) {
+ *    Mediator.connect(['Router','PageController'],function(router,page) {
  *      router.on('change',page.update)
  *    })
  */
-Mediator.couple = function MediatorCouple(modules,callback){
+Mediator.connect = function MediatorConnect(modules,callback){
   claimed = modules.filter(function(name){
-    var available = !!Coupled[name];
-    if(available) Coupled[name] = true;
+    var available = !!Connected[name];
+    if(available) Connected[name] = true;
     return available;
   });
   if(claimed.length > 0){
@@ -162,7 +162,7 @@ Mediator.forEach = function MediatorForEach(filter,moduleNames,fn){
   if(typeof fn !== 'function'){
     throw new Error('Callback is not a function!');
   }
-  Mediator.couple(moduleNames,function(modules){
+  Mediator.connect(moduleNames,function(modules){
     modules = Array.prototype.slice.apply(arguments);
     var callback = function EnhanceForEachCallback(module,name){
       if(filter === false || filter === name){
@@ -196,7 +196,7 @@ Mediator.forEach = function MediatorForEach(filter,moduleNames,fn){
  * Group Modules
  *
  * A new Module is created with `name`.
- * The grouped modules cannot be coupled anymore -
+ * The grouped modules cannot be connected anymore -
  * the group encapsulates the modules. 
  * 
  * @param  {string}   name    
@@ -208,7 +208,7 @@ Mediator.group = function MediatorGroup(name,moduleNames,callback){
   if(name[0] !== name[0].toUpperCase()){
     throw new Error('Group is a Module, so the name should start with UpperCase.');
   }
-  Mediator.couple(moduleNames,function MediatorGroupCallback(){
+  Mediator.connect(moduleNames,function MediatorGroupCallback(){
     var module = {};
     module = callback.apply(module,arguments) || module;
     Mediator.register(name,module);
@@ -226,6 +226,8 @@ function getModules(names){
     return Modules[name];
   });
 }
+
+Mediator.module = Modules;
 
 window.Mediator = Mediator;
 if(module && module.exports) module.exports = Mediator;
